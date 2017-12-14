@@ -21,7 +21,7 @@ var produk []Product
 func GetProductEndpoint(w http.ResponseWriter, req *http.Request) {
     params := mux.Vars(req)
     for _, item := range produk {
-        if item.ID == params["id"] {
+        if item.Kode == params["id"] {
             json.NewEncoder(w).Encode(item)
             return
         }
@@ -37,7 +37,7 @@ func CreateProductEndpoint(w http.ResponseWriter, req *http.Request) {
     params := mux.Vars(req)
     var Product Product
     _ = json.NewDecoder(req.Body).Decode(&Product)
-    Product.ID = params["id"]
+    Product.Kode = params["id"]
     produk = append(produk, Product)
     json.NewEncoder(w).Encode(produk)
 }
@@ -45,7 +45,7 @@ func CreateProductEndpoint(w http.ResponseWriter, req *http.Request) {
 func DeleteProductEndpoint(w http.ResponseWriter, req *http.Request) {
     params := mux.Vars(req)
     for index, item := range produk {
-        if item.ID == params["id"] {
+        if item.Kode == params["id"] {
             produk = append(produk[:index], produk[index+1:]...)
             break
         }
@@ -55,9 +55,9 @@ func DeleteProductEndpoint(w http.ResponseWriter, req *http.Request) {
 
 func main() {
     router := mux.NewRouter()
-    produk = append(produk, Product{ID: "1", Firstname: "Nic", Lastname: "Raboy", Address: &Address{City: "Dublin", State: "CA"}})
-    produk = append(produk, Product{ID: "2", Firstname: "Maria", Lastname: "Raboy"})
-    router.HandleFunc("/produk", GetPeopleEndpoint).Methods("GET")
+    produk = append(produk, Product{Kode: "1", Nama: "Nic", Harga_Sebelumnya: "Raboy", Harga_Sekarang: "15000", Lokasi: "naon"})
+    produk = append(produk, Product{Kode: "2", Nama: "Nic", Harga_Sebelumnya: "Raboy", Harga_Sekarang: "15000", Lokasi: "naon"})
+    router.HandleFunc("/produk", GetProdukEndpoint).Methods("GET")
     router.HandleFunc("/produk/{id}", GetProductEndpoint).Methods("GET")
     router.HandleFunc("/produk/{id}", CreateProductEndpoint).Methods("POST")
     router.HandleFunc("/produk/{id}", DeleteProductEndpoint).Methods("DELETE")
